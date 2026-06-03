@@ -1,3 +1,19 @@
+# 🎙️ SpeakUp — Soft Skills & Professional Speaking Trainer
+
+> A browser-based app to improve your professional English speaking and
+> workplace soft skills. Practise speaking aloud, build professional
+> vocabulary, and role-play real conversations — with instant, rule-based
+> feedback. Runs fully offline, no API key needed.
+>
+> **➡️ See [`web/README.md`](web/README.md) for full docs and how to run it.**
+>
+> Quick start:
+> ```bash
+> cd web && python3 -m http.server 8000   # then open http://localhost:8000
+> ```
+
+---
+
 # Slack Huddle Notes Bot
 
 Automatically captures and summarizes Slack huddle notes when a huddle ends - no manual input required.
