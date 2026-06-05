@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SpeakUp — Soft Skills & Professional Speaking</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎙️</text></svg>" />
+  <style>
+/* SpeakUp — styles */
+:root {
+  --bg: #0f1220;
+  --panel: #1a1f35;
+  --panel-2: #232a47;
+  --ink: #eef1fb;
+  --muted: #9aa3c4;
+  --brand: #6c7bff;
+  --brand-2: #8b5cf6;
+  --accent: #22c1a4;
+  --good: #2bd576;
+  --ok: #ffc24b;
+  --low: #ff6b6b;
+  --line: #2c3358;
+  --radius: 16px;
+  --shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: radial-gradient(1200px 600px at 80% -10%, #2a2150 0%, transparent 60%), var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* ---------- top bar ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 10;
+  backdrop-filter: blur(10px);
+  background: rgba(15,18,32,.82);
+  border-bottom: 1px solid var(--line);
+  padding: 14px clamp(16px, 5vw, 48px);
+}
+.brand { display: flex; align-items: center; gap: 14px; }
+.logo { font-size: 34px; }
+.brand h1 { margin: 0; font-size: 22px; letter-spacing: .5px; }
+.tagline { margin: 0; color: var(--muted); font-size: 13px; }
+
+.tabs { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.tab {
+  background: transparent; color: var(--muted);
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 8px 18px; font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: all .15s ease;
+}
+.tab:hover { color: var(--ink); border-color: var(--brand); }
+.tab.active { background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: #fff; border-color: transparent; }
+
+/* ---------- layout ---------- */
+main { max-width: 860px; margin: 0 auto; padding: 28px clamp(16px, 5vw, 48px) 60px; }
+.view-head h2 { margin: 0 0 4px; font-size: 24px; }
+.muted { color: var(--muted); }
+.small { font-size: 12.5px; }
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-top: 18px;
+  box-shadow: var(--shadow);
+}
+
+.row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.row.between { justify-content: space-between; }
+.field { color: var(--muted); font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; }
+
+/* ---------- inputs & buttons ---------- */
+.select {
+  background: var(--panel-2); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 10px;
+  padding: 8px 12px; font-size: 14px; cursor: pointer;
+}
+.btn {
+  background: var(--panel-2); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 10px;
+  padding: 10px 16px; font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: transform .08s ease, background .15s ease, border-color .15s;
+}
+.btn:hover:not(:disabled) { transform: translateY(-1px); border-color: var(--brand); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn.primary { background: linear-gradient(135deg, var(--brand), var(--brand-2)); border-color: transparent; color: #fff; }
+.btn.accent { background: var(--accent); border-color: transparent; color: #04231d; }
+.btn.ghost { background: transparent; }
+.btn.danger { color: var(--low); border-color: var(--low); }
+.btn.icon { padding: 8px 11px; font-size: 16px; }
+.mini { background: transparent; border: none; cursor: pointer; font-size: 13px; }
+
+/* ---------- prompt card ---------- */
+.prompt-card .prompt-text { font-size: 20px; font-weight: 600; margin: 4px 0; flex: 1; }
+
+/* ---------- practice ---------- */
+.controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.timer { margin-left: auto; font-variant-numeric: tabular-nums; font-size: 18px; color: var(--muted); font-weight: 700; }
+.status { color: var(--muted); font-size: 13px; margin: 12px 0; }
+.transcript {
+  width: 100%; resize: vertical;
+  background: var(--panel-2); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px; font-size: 15px; font-family: inherit; line-height: 1.6;
+}
+
+/* ---------- report ---------- */
+.report { margin-top: 18px; }
+.report h3 { margin: 0 0 12px; }
+.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 10px; }
+.metrics.big { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+.metric {
+  background: var(--panel-2); border: 1px solid var(--line);
+  border-radius: 12px; padding: 12px; text-align: center;
+}
+.metric .mval { display: block; font-size: 24px; font-weight: 800; }
+.metric .mval small { font-size: 12px; font-weight: 600; color: var(--muted); }
+.metric .mlabel { font-size: 12px; color: var(--muted); }
+.metric.good .mval { color: var(--good); }
+.metric.ok .mval { color: var(--ok); }
+.metric.low .mval { color: var(--low); }
+
+.feedback { margin-top: 16px; }
+.feedback h4 { margin: 0 0 8px; font-size: 15px; }
+.feedback ul { margin: 0; padding-left: 20px; }
+.feedback li { margin: 4px 0; }
+.feedback.wins { border-left: 3px solid var(--good); padding-left: 14px; }
+.feedback.tips { border-left: 3px solid var(--ok); padding-left: 14px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { background: var(--panel-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; font-size: 13px; }
+
+/* ---------- flashcards ---------- */
+.flashcard {
+  margin: 16px 0; padding: 28px; min-height: 180px;
+  background: linear-gradient(135deg, var(--panel-2), #2a3157);
+  border: 1px solid var(--line); border-radius: 16px;
+  cursor: pointer; text-align: center;
+  display: flex; flex-direction: column; justify-content: center; gap: 10px;
+  transition: border-color .15s;
+}
+.flashcard:hover { border-color: var(--brand); }
+.flashcard.flipped { background: linear-gradient(135deg, #1e3a34, #224a40); }
+.fc-label { text-transform: uppercase; letter-spacing: 1px; font-size: 11px; color: var(--muted); }
+.fc-main { font-size: 22px; font-weight: 700; }
+.fc-hint { font-size: 12px; color: var(--muted); }
+.fc-extra p { margin: 6px 0; font-size: 14px; }
+
+/* ---------- quiz ---------- */
+.quiz-q { color: var(--muted); margin: 14px 0 6px; }
+.quiz-prompt { font-size: 20px; font-weight: 700; margin-bottom: 16px; }
+.options { display: grid; gap: 10px; }
+.btn.option { text-align: left; width: 100%; }
+.btn.option.correct { background: rgba(43,213,118,.18); border-color: var(--good); color: var(--good); }
+.btn.option.wrong { background: rgba(255,107,107,.16); border-color: var(--low); color: var(--low); }
+.quiz-feedback { margin-top: 16px; }
+.quiz-feedback .fb { padding: 14px; border-radius: 12px; margin-bottom: 12px; }
+.quiz-feedback .fb.good { background: rgba(43,213,118,.12); border: 1px solid var(--good); }
+.quiz-feedback .fb.bad { background: rgba(255,107,107,.1); border: 1px solid var(--low); }
+.quiz-feedback .fb p { margin: 6px 0 0; }
+
+/* ---------- scenarios ---------- */
+.scenario-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; margin-top: 18px; }
+.scenario-card {
+  text-align: left; cursor: pointer;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+  padding: 18px; color: var(--ink); transition: transform .1s, border-color .15s;
+}
+.scenario-card:hover { transform: translateY(-2px); border-color: var(--brand); }
+.scenario-card h3 { margin: 8px 0 6px; font-size: 16px; }
+.scenario-card p { margin: 0; font-size: 13px; }
+.tag {
+  display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
+  background: rgba(108,123,255,.18); color: var(--brand); border-radius: 999px; padding: 3px 10px;
+}
+.scenario-detail h3 { margin: 10px 0; }
+.prompt-callout {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: var(--panel-2); border-left: 3px solid var(--brand);
+  border-radius: 10px; padding: 14px; margin: 14px 0;
+}
+.prompt-callout p { margin: 0; font-size: 17px; font-weight: 600; }
+.hint-box { margin: 10px 0; background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 6px 14px; }
+.hint-box summary { cursor: pointer; font-weight: 600; padding: 8px 0; }
+.hint-box ul { margin: 4px 0 12px; }
+
+/* ---------- history ---------- */
+.history { list-style: none; margin: 14px 0 0; padding: 0; }
+.history li { display: flex; gap: 14px; align-items: flex-start; padding: 12px 0; border-top: 1px solid var(--line); }
+.h-score {
+  flex: 0 0 auto; width: 42px; height: 42px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; font-weight: 800;
+  background: var(--panel-2);
+}
+.h-score.good { color: var(--good); } .h-score.ok { color: var(--ok); } .h-score.low { color: var(--low); }
+.h-body { font-size: 14px; }
+
+/* ---------- footer ---------- */
+.foot { text-align: center; color: var(--muted); font-size: 12px; padding: 20px; border-top: 1px solid var(--line); }
+
+@media (max-width: 560px) {
+  .prompt-card .prompt-text { font-size: 17px; }
+  .timer { margin-left: 0; }
+}
+
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🎙️</span>
+      <div>
+        <h1>SpeakUp</h1>
+        <p class="tagline">Practise professional English speaking & soft skills</p>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button class="tab active" data-view="speaking">Speaking</button>
+      <button class="tab" data-view="vocab">Vocabulary</button>
+      <button class="tab" data-view="conversation">Conversation</button>
+      <button class="tab" data-view="progress">Progress</button>
+    </nav>
+  </header>
+
+  <main id="app">
+    <!-- Views are rendered here by app.js -->
+  </main>
+
+  <footer class="foot">
+    <span>Runs entirely in your browser — your speech never leaves your device.</span>
+  </footer>
+
+  <script>
+
+/* ===== js/data.js ===== */
+/*
+ * data.js — All practice content for the SpeakUp app.
+ * Pure data, no logic. Loaded as a global `APP_DATA` object.
+ */
+window.APP_DATA = {
+
+  /* ----------------------------------------------------------------
+   * SPEAKING PRACTICE PROMPTS
+   * Grouped by difficulty so learners can ramp up.
+   * ---------------------------------------------------------------- */
+  speakingPrompts: {
+    warmup: [
+      "Describe your morning routine in detail.",
+      "Talk about your favourite meal and how it's made.",
+      "Describe the place where you grew up.",
+      "Explain how to get from your home to your workplace.",
+      "Talk about a hobby you enjoy and why you like it."
+    ],
+    professional: [
+      "Introduce yourself as you would at the start of a job interview (60 seconds).",
+      "Give a one-minute update on a project you are currently working on.",
+      "Explain your job to someone outside your industry.",
+      "Pitch an idea for improving your team's productivity.",
+      "Describe a professional achievement you are proud of and why it mattered.",
+      "Walk through how you would onboard a new team member.",
+      "Summarise the key points of a meeting for someone who missed it."
+    ],
+    opinion: [
+      "Should companies allow fully remote work? Argue your position.",
+      "Is it better to be a specialist or a generalist in your career?",
+      "What makes a great leader? Explain with examples.",
+      "Should AI tools be used in education? Give your view.",
+      "What is the most important soft skill in the workplace, and why?"
+    ],
+    storytelling: [
+      "Tell a story about a time you solved a difficult problem at work.",
+      "Describe a moment you received tough feedback and what you did with it.",
+      "Talk about a time you had to persuade someone to change their mind.",
+      "Describe a mistake you made and what you learned from it.",
+      "Tell us about a time you worked under pressure to hit a deadline."
+    ]
+  },
+
+  /* ----------------------------------------------------------------
+   * FILLER WORDS / CRUTCH PHRASES the analyser listens for.
+   * Order matters: multi-word phrases are matched before single words.
+   * ---------------------------------------------------------------- */
+  fillerWords: [
+    "you know", "i mean", "kind of", "sort of", "you see",
+    "i guess", "or something", "and stuff", "and so on",
+    "um", "uh", "uhm", "erm", "ah", "er", "hmm",
+    "like", "basically", "actually", "literally", "honestly",
+    "just", "really", "very", "so", "well", "right", "okay", "ok"
+  ],
+
+  /* ----------------------------------------------------------------
+   * WEAK -> STRONG word/phrase suggestions for professional speech.
+   * ---------------------------------------------------------------- */
+  weakWords: {
+    "good": ["effective", "excellent", "strong", "valuable"],
+    "bad": ["ineffective", "poor", "problematic", "suboptimal"],
+    "big": ["significant", "substantial", "considerable", "major"],
+    "small": ["minor", "modest", "limited"],
+    "thing": ["aspect", "element", "factor", "component"],
+    "stuff": ["material", "content", "details", "items"],
+    "a lot": ["considerably", "substantially", "a great deal"],
+    "get": ["obtain", "receive", "achieve", "secure"],
+    "got": ["received", "obtained", "secured"],
+    "make sure": ["ensure", "confirm", "guarantee"],
+    "find out": ["determine", "discover", "establish"],
+    "go up": ["increase", "rise", "grow"],
+    "go down": ["decrease", "decline", "fall"],
+    "deal with": ["address", "handle", "manage", "resolve"],
+    "show": ["demonstrate", "illustrate", "highlight"],
+    "help": ["support", "assist", "enable", "facilitate"],
+    "use": ["leverage", "utilise", "employ"],
+    "start": ["initiate", "launch", "commence"],
+    "end": ["conclude", "finalise", "complete"],
+    "fix": ["resolve", "rectify", "address"],
+    "talk about": ["discuss", "address", "cover"]
+  },
+
+  /* ----------------------------------------------------------------
+   * VOCABULARY & PHRASING DECKS
+   * Each card: casual (what you might say) -> professional alternative,
+   * with meaning + example for context. Used for flashcards & quiz.
+   * ---------------------------------------------------------------- */
+  vocabDecks: {
+    "Meetings": [
+      { casual: "Let's start.", pro: "Let's get the meeting underway.", meaning: "A polished way to open a meeting.", example: "Now that everyone's here, let's get the meeting underway." },
+      { casual: "What do you think?", pro: "I'd value your perspective on this.", meaning: "Invite someone's opinion respectfully.", example: "Before we decide, I'd value your perspective on this." },
+      { casual: "I don't agree.", pro: "I see it a little differently.", meaning: "Disagree without sounding confrontational.", example: "I see it a little differently — could I explain my reasoning?" },
+      { casual: "Can you say that again?", pro: "Could you elaborate on that point?", meaning: "Ask someone to expand or repeat.", example: "Could you elaborate on that point so I'm clear?" },
+      { casual: "Let's stop here.", pro: "Let's wrap up and capture the action items.", meaning: "Close a meeting professionally.", example: "We're at time, so let's wrap up and capture the action items." },
+      { casual: "That's not my job.", pro: "That sits a little outside my remit, but I can point you to the right person.", meaning: "Decline ownership politely.", example: "That sits outside my remit, but I'm happy to connect you with the right person." }
+    ],
+    "Email & Writing": [
+      { casual: "Sorry for the late reply.", pro: "Thank you for your patience while I looked into this.", meaning: "Reframe an apology positively.", example: "Thank you for your patience while I looked into this." },
+      { casual: "Just checking in.", pro: "I wanted to follow up on my previous note.", meaning: "Polite follow-up phrasing.", example: "I wanted to follow up on my previous note regarding the proposal." },
+      { casual: "Get back to me.", pro: "I'd appreciate your thoughts when you have a moment.", meaning: "Request a reply without pressure.", example: "I'd appreciate your thoughts when you have a moment." },
+      { casual: "Let me know if you have questions.", pro: "Please don't hesitate to reach out with any questions.", meaning: "Standard closing line.", example: "Please don't hesitate to reach out with any questions." },
+      { casual: "ASAP", pro: "at your earliest convenience", meaning: "Soften an urgent request.", example: "Could you review this at your earliest convenience?" }
+    ],
+    "Negotiation": [
+      { casual: "No.", pro: "That won't work for us, but here's what we can offer.", meaning: "Reject while keeping the door open.", example: "That won't work for us, but here's what we can offer instead." },
+      { casual: "That's too expensive.", pro: "Help me understand the value behind this price.", meaning: "Question cost without attacking.", example: "Before we go further, help me understand the value behind this price." },
+      { casual: "Take it or leave it.", pro: "This is the strongest offer we can make at this stage.", meaning: "State a firm position professionally.", example: "This is the strongest offer we can make at this stage." },
+      { casual: "I want more.", pro: "For us to move forward, we'd need to see X.", meaning: "Ask for more with a condition.", example: "For us to move forward, we'd need to see a longer warranty." },
+      { casual: "Let's split it.", pro: "Could we find a middle ground that works for both sides?", meaning: "Propose a compromise.", example: "Could we find a middle ground that works for both sides?" }
+    ],
+    "Giving Feedback": [
+      { casual: "You did this wrong.", pro: "I noticed something we could approach differently next time.", meaning: "Open feedback without blame.", example: "I noticed something we could approach differently next time." },
+      { casual: "Good job.", pro: "The way you handled the client call really stood out.", meaning: "Specific praise lands harder.", example: "The way you handled the client call really stood out to me." },
+      { casual: "You always do this.", pro: "I've seen this come up a couple of times — can we talk about it?", meaning: "Avoid absolutes when criticising.", example: "I've seen this come up a couple of times — can we talk about it?" },
+      { casual: "Do it like this.", pro: "One approach that's worked for me is...", meaning: "Offer guidance, not orders.", example: "One approach that's worked for me is to draft the outline first." }
+    ],
+    "Presentations": [
+      { casual: "Today I'll talk about...", pro: "By the end of this session, you'll be able to...", meaning: "Open with the audience's benefit.", example: "By the end of this session, you'll be able to run the report yourself." },
+      { casual: "Next slide.", pro: "That brings us to our next point...", meaning: "Smooth verbal transition.", example: "That brings us to our next point: the budget." },
+      { casual: "Um, that's it.", pro: "To summarise the three key takeaways...", meaning: "Close with a recap.", example: "To summarise the three key takeaways before we open for questions..." },
+      { casual: "Any questions?", pro: "I'd be glad to take your questions now.", meaning: "Invite Q&A confidently.", example: "I'd be glad to take your questions now." }
+    ],
+    "Small Talk": [
+      { casual: "How are you?", pro: "How has your week been treating you?", meaning: "A warmer, more open opener.", example: "Good to see you — how has your week been treating you?" },
+      { casual: "Nice weather.", pro: "Have you managed to get out and enjoy this weather?", meaning: "Turn a cliché into a real question.", example: "Have you managed to get out and enjoy this weather?" },
+      { casual: "What do you do?", pro: "What's keeping you busy these days?", meaning: "Less interview-like opener.", example: "So, what's keeping you busy these days?" },
+      { casual: "I have to go.", pro: "It's been great chatting — I should let you get on.", meaning: "Exit a conversation gracefully.", example: "It's been great chatting — I should let you get on. Let's catch up soon." }
+    ]
+  },
+
+  /* ----------------------------------------------------------------
+   * CONVERSATION / SOFT-SKILL ROLE-PLAY SCENARIOS
+   * Each: title, situation, your role, the prompt to respond to,
+   * useful phrases, and what good responses tend to include.
+   * ---------------------------------------------------------------- */
+  scenarios: [
+    {
+      id: "feedback-peer",
+      category: "Giving Feedback",
+      title: "Giving a colleague constructive feedback",
+      situation: "A teammate, Alex, submitted a report with several errors that delayed the project.",
+      role: "You are Alex's peer. You want to raise the issue without damaging the relationship.",
+      prompt: "Alex says: \"Hey, did you get a chance to look at my report? I think it turned out pretty well!\" — How do you respond?",
+      phrases: [
+        "I appreciate the effort you put into this.",
+        "I did spot a few things I'd love to talk through.",
+        "Can we look at these together so the next one goes smoothly?"
+      ],
+      goodAnswerIncludes: ["acknowledge effort", "be specific", "stay collaborative", "offer to help"]
+    },
+    {
+      id: "smalltalk-networking",
+      category: "Small Talk",
+      title: "Networking at a professional event",
+      situation: "You're at an industry conference and standing near someone you don't know during a coffee break.",
+      role: "You want to start a friendly, professional conversation.",
+      prompt: "You make eye contact with a stranger holding a coffee. Break the ice and keep the conversation going.",
+      phrases: [
+        "This is my first time at this conference — how about you?",
+        "What brought you to this session?",
+        "I'd love to hear what you're working on."
+      ],
+      goodAnswerIncludes: ["open-ended question", "share something about yourself", "show genuine interest"]
+    },
+    {
+      id: "disagree-manager",
+      category: "Speaking Up",
+      title: "Disagreeing with your manager respectfully",
+      situation: "Your manager proposes a deadline you believe is unrealistic.",
+      role: "You want to push back without seeming difficult.",
+      prompt: "Your manager says: \"Let's ship this by Friday.\" You think that's too soon. What do you say?",
+      phrases: [
+        "I want this to succeed, so I'd like to flag a concern about timing.",
+        "To hit Friday, we'd need to drop X — is that the right trade-off?",
+        "Could we aim for Monday to keep the quality high?"
+      ],
+      goodAnswerIncludes: ["align on the shared goal", "give a concrete reason", "propose an alternative"]
+    },
+    {
+      id: "negotiation-raise",
+      category: "Negotiation",
+      title: "Asking for a raise",
+      situation: "You've taken on more responsibility over the past year and want a salary increase.",
+      role: "You're meeting your manager to make the case.",
+      prompt: "Your manager asks: \"So, what did you want to discuss?\" Make your opening case for a raise.",
+      phrases: [
+        "Over the past year I've taken on X and delivered Y.",
+        "Based on my contributions and market rates, I'd like to discuss my compensation.",
+        "What would it take to get there?"
+      ],
+      goodAnswerIncludes: ["state the ask clearly", "back it with specifics", "stay calm and positive"]
+    },
+    {
+      id: "conflict-deescalate",
+      category: "Conflict",
+      title: "Calming an upset client",
+      situation: "A client is frustrated because a delivery was late.",
+      role: "You represent your company and want to rebuild trust.",
+      prompt: "The client says: \"This is the second time you've let us down. I'm not happy.\" How do you respond?",
+      phrases: [
+        "You're right to be frustrated, and I'm sorry this happened again.",
+        "Here's exactly what went wrong and what we're doing about it.",
+        "Let me make sure this doesn't happen a third time."
+      ],
+      goodAnswerIncludes: ["acknowledge the feeling", "take responsibility", "offer a concrete next step"]
+    },
+    {
+      id: "intro-interview",
+      category: "Interviews",
+      title: "The \"Tell me about yourself\" question",
+      situation: "You're in a job interview and have just been asked the classic opener.",
+      role: "You want a crisp, confident 60-second answer.",
+      prompt: "The interviewer says: \"So, tell me about yourself.\" Give your answer.",
+      phrases: [
+        "I'm a [role] with X years in [field].",
+        "Most recently, I [key achievement].",
+        "I'm drawn to this role because..."
+      ],
+      goodAnswerIncludes: ["present (who you are now)", "past (relevant experience)", "future (why this role)"]
+    }
+  ]
+};
+
+
+/* ===== js/analyzer.js ===== */
+/*
+ * analyzer.js — Rule-based speech analysis. No network, no AI.
+ * Takes a transcript (+ optional spoken duration) and returns a
+ * structured report with a score and actionable tips.
+ */
+(function () {
+  const D = window.APP_DATA;
+
+  // Escape a phrase for safe use inside a RegExp.
+  function esc(s) {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, "\\</body>");
+  }
+
+  // Split transcript into lowercase word tokens.
+  function tokenize(text) {
+    const m = text.toLowerCase().match(/[a-z']+/g);
+    return m || [];
+  }
+
+  // Count filler words/phrases. Multi-word phrases checked first so
+  // "you know" isn't double-counted as separate words.
+  function countFillers(text) {
+    const lower = " " + text.toLowerCase().replace(/[^a-z' ]+/g, " ").replace(/\s+/g, " ") + " ";
+    const hits = {};
+    let total = 0;
+    for (const filler of D.fillerWords) {
+      const re = new RegExp("(?:^| )" + esc(filler) + "(?= |$)", "g");
+      const matches = lower.match(re);
+      if (matches && matches.length) {
+        hits[filler] = matches.length;
+        total += matches.length;
+      }
+    }
+    return { hits, total };
+  }
+
+  // Find weak words present in the text and their stronger alternatives.
+  function findWeakWords(text) {
+    const lower = " " + text.toLowerCase().replace(/[^a-z' ]+/g, " ").replace(/\s+/g, " ") + " ";
+    const found = [];
+    for (const [weak, strong] of Object.entries(D.weakWords)) {
+      const re = new RegExp("(?:^| )" + esc(weak) + "(?= |$)", "g");
+      const matches = lower.match(re);
+      if (matches && matches.length) {
+        found.push({ word: weak, count: matches.length, suggestions: strong });
+      }
+    }
+    return found.sort((a, b) => b.count - a.count);
+  }
+
+  // Words repeated unusually often (excluding common stop words & fillers).
+  function findRepetition(tokens) {
+    const stop = new Set([
+      "the", "a", "an", "and", "or", "but", "to", "of", "in", "on", "at",
+      "for", "with", "is", "are", "was", "were", "be", "been", "i", "you",
+      "we", "they", "it", "he", "she", "that", "this", "my", "our", "your",
+      "as", "by", "from", "have", "has", "had", "do", "did", "will", "would",
+      "can", "could", "should", "not", "no", "yes", "if", "then", "so", "me"
+    ]);
+    const counts = {};
+    for (const t of tokens) {
+      if (t.length < 4 || stop.has(t)) continue;
+      counts[t] = (counts[t] || 0) + 1;
+    }
+    return Object.entries(counts)
+      .filter(([, c]) => c >= 4)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([word, count]) => ({ word, count }));
+  }
+
+  // Rough sentence segmentation. Speech-to-text rarely adds punctuation,
+  // so we fall back to estimating sentences from word count.
+  function sentenceStats(text, wordCount) {
+    const parts = text.split(/[.!?]+/).map(s => s.trim()).filter(Boolean);
+    const sentenceCount = parts.length >= 2 ? parts.length : Math.max(1, Math.round(wordCount / 15));
+    const avgLen = wordCount / sentenceCount;
+    return { sentenceCount, avgLen };
+  }
+
+  /*
+   * Main entry point.
+   *   transcript: string of what was said
+   *   durationSec: seconds spoken (0/undefined if unknown)
+   */
+  function analyze(transcript, durationSec) {
+    const text = (transcript || "").trim();
+    const tokens = tokenize(text);
+    const wordCount = tokens.length;
+    const uniqueCount = new Set(tokens).size;
+
+    const fillers = countFillers(text);
+    const weak = findWeakWords(text);
+    const repeats = findRepetition(tokens);
+    const sentences = sentenceStats(text, wordCount);
+
+    // Type-token ratio = vocabulary variety (0..1). Higher is richer.
+    const ttr = wordCount ? uniqueCount / wordCount : 0;
+
+    // Words per minute (only meaningful if we timed the speech).
+    const wpm = durationSec && durationSec > 2 ? Math.round((wordCount / durationSec) * 60) : null;
+
+    const fillerRate = wordCount ? fillers.total / wordCount : 0; // fraction
+
+    // ---- Scoring (0-100). Start at 100 and deduct for issues. ----
+    let score = 100;
+    const tips = [];
+    const wins = [];
+
+    if (wordCount < 20) {
+      tips.push("Try to speak for longer — aim for at least 30–40 words so there's enough to work with.");
+      score -= 15;
+    }
+
+    // Filler words
+    if (fillerRate > 0.12) {
+      score -= 25;
+      tips.push(`Filler words are frequent (${fillers.total} found). Pause silently instead of saying "um", "like" or "you know".`);
+    } else if (fillerRate > 0.06) {
+      score -= 12;
+      tips.push(`A few filler words crept in (${fillers.total}). A short pause sounds more confident than a filler.`);
+    } else if (wordCount >= 20) {
+      wins.push("Very few filler words — you sound clear and deliberate.");
+    }
+
+    // Pace
+    if (wpm !== null) {
+      if (wpm > 180) {
+        score -= 12;
+        tips.push(`You spoke quickly (~${wpm} wpm). Slow down to 130–160 wpm so listeners can follow.`);
+      } else if (wpm < 100) {
+        score -= 8;
+        tips.push(`Your pace was slow (~${wpm} wpm). A little more energy will keep listeners engaged.`);
+      } else {
+        wins.push(`Great speaking pace (~${wpm} wpm).`);
+      }
+    }
+
+    // Vocabulary variety
+    if (wordCount >= 30) {
+      if (ttr < 0.4) {
+        score -= 10;
+        tips.push("You repeated a lot of the same words. Try varying your vocabulary for richer delivery.");
+      } else if (ttr > 0.55) {
+        wins.push("Rich, varied vocabulary.");
+      }
+    }
+
+    // Weak words
+    if (weak.length >= 3) {
+      score -= 10;
+      tips.push("Several vague words could be sharper (see suggestions below) for a more professional tone.");
+    } else if (weak.length > 0) {
+      score -= 4;
+    }
+
+    // Repetition
+    if (repeats.length >= 2) {
+      score -= 6;
+      tips.push(`You leaned on a few words repeatedly (e.g. "${repeats[0].word}"). Mix in synonyms.`);
+    }
+
+    // Sentence length
+    if (sentences.avgLen > 28) {
+      score -= 6;
+      tips.push("Some sentences ran long. Shorter sentences are easier to follow when speaking.");
+    } else if (wordCount >= 30 && sentences.avgLen >= 8 && sentences.avgLen <= 22) {
+      wins.push("Well-balanced sentence length.");
+    }
+
+    score = Math.max(0, Math.min(100, Math.round(score)));
+
+    if (!tips.length && wordCount >= 20) {
+      tips.push("Excellent — keep practising to lock in this level of fluency.");
+    }
+
+    return {
+      text,
+      wordCount,
+      uniqueCount,
+      durationSec: durationSec || 0,
+      wpm,
+      fillers,
+      fillerRate,
+      weak,
+      repeats,
+      sentences,
+      ttr,
+      score,
+      tips,
+      wins
+    };
+  }
+
+  window.Analyzer = { analyze };
+})();
+
+
+/* ===== js/speech.js ===== */
+/*
+ * speech.js — Thin wrappers around the browser Web Speech API.
+ *  - Recognition: speech-to-text (Chrome/Edge). Gracefully reports
+ *    when unsupported so the UI can fall back to typing.
+ *  - Speak: text-to-speech for hearing model phrases / pronunciation.
+ */
+(function () {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  function isRecognitionSupported() {
+    return !!SR;
+  }
+
+  /*
+   * Create a recogniser session.
+   * callbacks: { onInterim(text), onFinal(text), onError(msg), onEnd() }
+   * Returns { start, stop }.
+   */
+  function createRecognizer(callbacks) {
+    if (!SR) return null;
+    const rec = new SR();
+    rec.lang = "en-US";
+    rec.continuous = true;
+    rec.interimResults = true;
+
+    let finalText = "";
+    let manualStop = false;
+
+    rec.onresult = function (event) {
+      let interim = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const chunk = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalText += chunk + " ";
+        } else {
+          interim += chunk;
+        }
+      }
+      if (callbacks.onInterim) callbacks.onInterim((finalText + interim).trim());
+    };
+
+    rec.onerror = function (e) {
+      if (callbacks.onError) callbacks.onError(e.error || "recognition error");
+    };
+
+    rec.onend = function () {
+      // Auto-restart unless the user explicitly stopped, so longer
+      // answers don't get cut off by the engine's idle timeout.
+      if (!manualStop) {
+        try { rec.start(); return; } catch (_) { /* fall through */ }
+      }
+      if (callbacks.onFinal) callbacks.onFinal(finalText.trim());
+      if (callbacks.onEnd) callbacks.onEnd();
+    };
+
+    return {
+      start() {
+        finalText = "";
+        manualStop = false;
+        try { rec.start(); } catch (_) { /* already started */ }
+      },
+      stop() {
+        manualStop = true;
+        rec.stop();
+      }
+    };
+  }
+
+  // Speak text aloud (for hearing professional phrases).
+  function speak(text) {
+    if (!window.speechSynthesis) return false;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "en-US";
+    u.rate = 0.95;
+    window.speechSynthesis.speak(u);
+    return true;
+  }
+
+  window.Speech = { isRecognitionSupported, createRecognizer, speak };
+})();
+
+
+/* ===== js/storage.js ===== */
+/*
+ * storage.js — Local progress tracking via localStorage.
+ * Keeps a rolling history of practice sessions plus aggregate stats.
+ * Everything stays on the user's device; nothing is uploaded.
+ */
+(function () {
+  const KEY = "speakup.progress.v1";
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (_) { /* ignore */ }
+    return { sessions: [], totalWords: 0, totalSeconds: 0, vocabReviewed: 0 };
+  }
+
+  function save(state) {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (_) { /* ignore */ }
+  }
+
+  // Record a completed speaking/conversation session.
+  function recordSession({ kind, score, wordCount, durationSec, prompt }) {
+    const state = load();
+    state.sessions.unshift({
+      kind,
+      score: score || 0,
+      wordCount: wordCount || 0,
+      durationSec: durationSec || 0,
+      prompt: prompt || "",
+      at: Date.now()
+    });
+    state.sessions = state.sessions.slice(0, 100); // cap history
+    state.totalWords += wordCount || 0;
+    state.totalSeconds += durationSec || 0;
+    save(state);
+    return state;
+  }
+
+  function recordVocab(n) {
+    const state = load();
+    state.vocabReviewed += n || 1;
+    save(state);
+    return state;
+  }
+
+  // Distinct calendar days with at least one session.
+  function practiceDays(state) {
+    const days = new Set();
+    for (const s of state.sessions) {
+      days.add(new Date(s.at).toDateString());
+    }
+    return days;
+  }
+
+  // Current consecutive-day streak ending today or yesterday.
+  function currentStreak(state) {
+    const days = practiceDays(state);
+    if (!days.size) return 0;
+    let streak = 0;
+    const d = new Date();
+    // allow today OR yesterday to keep the streak alive
+    if (!days.has(d.toDateString())) {
+      d.setDate(d.getDate() - 1);
+      if (!days.has(d.toDateString())) return 0;
+    }
+    while (days.has(d.toDateString())) {
+      streak++;
+      d.setDate(d.getDate() - 1);
+    }
+    return streak;
+  }
+
+  function averageScore(state) {
+    const scored = state.sessions.filter(s => s.score > 0);
+    if (!scored.length) return 0;
+    return Math.round(scored.reduce((a, s) => a + s.score, 0) / scored.length);
+  }
+
+  function reset() {
+    try { localStorage.removeItem(KEY); } catch (_) { /* ignore */ }
+  }
+
+  window.Store = {
+    load, recordSession, recordVocab,
+    currentStreak, averageScore, practiceDays, reset
+  };
+})();
+
+
+/* ===== js/app.js ===== */
+/*
+ * app.js — UI controller. Wires the four views (Speaking, Vocabulary,
+ * Conversation, Progress) to the analyzer, speech and storage modules.
+ */
+(function () {
+  const D = window.APP_DATA;
+  const app = document.getElementById("app");
+  const tabs = document.getElementById("tabs");
+
+  // ---------- small DOM helpers ----------
+  function el(tag, attrs, children) {
+    const node = document.createElement(tag);
+    if (attrs) {
+      for (const [k, v] of Object.entries(attrs)) {
+        if (k === "class") node.className = v;
+        else if (k === "html") node.innerHTML = v;
+        else if (k.startsWith("on") && typeof v === "function") {
+          node.addEventListener(k.slice(2), v);
+        } else if (v !== null && v !== undefined) {
+          node.setAttribute(k, v);
+        }
+      }
+    }
+    (children || []).forEach(c => {
+      if (c == null) return;
+      node.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+    });
+    return node;
+  }
+  function clear(n) { while (n.firstChild) n.removeChild(n.firstChild); }
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  function fmtTime(sec) {
+    const m = Math.floor(sec / 60), s = Math.round(sec % 60);
+    return `${m}:${String(s).padStart(2, "0")}`;
+  }
+
+  // ===================================================================
+  //  SHARED: a record + analyse panel used by Speaking & Conversation
+  // ===================================================================
+  function buildPractice(promptText, kind, onDone) {
+    const supported = window.Speech.isRecognitionSupported();
+    let recognizer = null, startedAt = 0, timerId = null;
+
+    const status = el("div", { class: "status" }, [
+      supported ? "Ready — tap Record and start speaking."
+                : "Speech-to-text isn't supported in this browser. Type what you'd say below."
+    ]);
+    const timer = el("span", { class: "timer" }, ["0:00"]);
+    const transcriptBox = el("textarea", {
+      class: "transcript",
+      rows: "5",
+      placeholder: supported
+        ? "Your words will appear here as you speak — you can also edit them."
+        : "Type your spoken answer here, then tap Analyse."
+    });
+    const results = el("div", { class: "results" });
+
+    const recordBtn = el("button", { class: "btn primary" }, ["● Record"]);
+    const stopBtn = el("button", { class: "btn", disabled: "true" }, ["■ Stop"]);
+    const analyzeBtn = el("button", { class: "btn accent" }, ["Analyse"]);
+
+    function tickStart() {
+      startedAt = Date.now();
+      timerId = setInterval(() => {
+        timer.textContent = fmtTime((Date.now() - startedAt) / 1000);
+      }, 250);
+    }
+    function tickStop() { if (timerId) { clearInterval(timerId); timerId = null; } }
+
+    recordBtn.addEventListener("click", () => {
+      if (supported) {
+        recognizer = window.Speech.createRecognizer({
+          onInterim: t => { transcriptBox.value = t; },
+          onError: msg => { status.textContent = "Mic error: " + msg + ". You can type instead."; },
+          onEnd: () => {}
+        });
+        recognizer.start();
+      }
+      status.textContent = "Recording… speak naturally.";
+      recordBtn.disabled = true;
+      stopBtn.disabled = false;
+      transcriptBox.value = "";
+      tickStart();
+    });
+
+    stopBtn.addEventListener("click", () => {
+      if (recognizer) recognizer.stop();
+      tickStop();
+      status.textContent = "Stopped. Edit if needed, then tap Analyse.";
+      recordBtn.disabled = false;
+      stopBtn.disabled = true;
+    });
+
+    analyzeBtn.addEventListener("click", () => {
+      if (recognizer) { recognizer.stop(); recognizer = null; }
+      tickStop();
+      recordBtn.disabled = false;
+      stopBtn.disabled = true;
+      const text = transcriptBox.value.trim();
+      if (!text) { status.textContent = "Nothing to analyse yet — record or type something first."; return; }
+      const dur = startedAt ? (Date.now() - startedAt) / 1000 : 0;
+      const report = window.Analyzer.analyze(text, dur);
+      clear(results);
+      results.appendChild(renderReport(report));
+      window.Store.recordSession({
+        kind, score: report.score, wordCount: report.wordCount,
+        durationSec: report.durationSec, prompt: promptText
+      });
+      if (onDone) onDone(report);
+      results.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+
+    return el("div", { class: "practice" }, [
+      el("div", { class: "controls" }, [recordBtn, stopBtn, analyzeBtn, timer]),
+      status,
+      transcriptBox,
+      results
+    ]);
+  }
+
+  // Render the analysis report card.
+  function renderReport(r) {
+    const scoreClass = r.score >= 80 ? "good" : r.score >= 60 ? "ok" : "low";
+
+    const metrics = el("div", { class: "metrics" }, [
+      metric("Score", r.score, "/100", scoreClass),
+      metric("Words", r.wordCount, ""),
+      metric("Fillers", r.fillers.total, ""),
+      metric("Pace", r.wpm ? r.wpm : "—", r.wpm ? " wpm" : ""),
+      metric("Variety", Math.round(r.ttr * 100), "%"),
+      metric("Time", fmtTime(r.durationSec), "")
+    ]);
+
+    const sections = [el("h3", null, [`Your result: ${r.score}/100`]), metrics];
+
+    if (r.wins.length) {
+      sections.push(el("div", { class: "feedback wins" }, [
+        el("h4", null, ["✅ What worked"]),
+        el("ul", null, r.wins.map(w => el("li", null, [w])))
+      ]));
+    }
+    if (r.tips.length) {
+      sections.push(el("div", { class: "feedback tips" }, [
+        el("h4", null, ["💡 To improve"]),
+        el("ul", null, r.tips.map(t => el("li", null, [t])))
+      ]));
+    }
+    if (r.fillers.total) {
+      const list = Object.entries(r.fillers.hits).sort((a, b) => b[1] - a[1])
+        .map(([w, c]) => el("span", { class: "chip" }, [`${w} ×${c}`]));
+      sections.push(el("div", { class: "feedback" }, [
+        el("h4", null, ["Filler words spotted"]),
+        el("div", { class: "chips" }, list)
+      ]));
+    }
+    if (r.weak.length) {
+      sections.push(el("div", { class: "feedback" }, [
+        el("h4", null, ["Stronger word choices"]),
+        el("ul", null, r.weak.map(w =>
+          el("li", null, [
+            el("strong", null, [`"${w.word}"`]),
+            ` → try: ${w.suggestions.slice(0, 3).join(", ")}`
+          ])
+        ))
+      ]));
+    }
+    return el("div", { class: "report" }, sections);
+  }
+  function metric(label, value, unit, cls) {
+    return el("div", { class: "metric " + (cls || "") }, [
+      el("span", { class: "mval" }, [String(value), el("small", null, [unit || ""])]),
+      el("span", { class: "mlabel" }, [label])
+    ]);
+  }
+
+  // ===================================================================
+  //  VIEW: SPEAKING
+  // ===================================================================
+  function renderSpeaking() {
+    clear(app);
+    const levels = Object.keys(D.speakingPrompts);
+    const state = { level: levels[0], prompt: pick(D.speakingPrompts[levels[0]]) };
+
+    const promptText = el("p", { class: "prompt-text" }, [state.prompt]);
+    const practiceHost = el("div");
+
+    function rebuildPractice() {
+      clear(practiceHost);
+      practiceHost.appendChild(buildPractice(state.prompt, "speaking"));
+    }
+
+    function newPrompt() {
+      state.prompt = pick(D.speakingPrompts[state.level]);
+      promptText.textContent = state.prompt;
+      rebuildPractice();
+    }
+
+    const levelSelect = el("select", {
+      class: "select",
+      onchange: e => { state.level = e.target.value; newPrompt(); }
+    }, levels.map(l => el("option", { value: l }, [labelize(l)])));
+
+    app.appendChild(el("section", { class: "view" }, [
+      el("div", { class: "view-head" }, [
+        el("h2", null, ["🎤 Speaking practice"]),
+        el("p", { class: "muted" }, ["Pick a prompt, speak for 30–90 seconds, then get instant feedback on fillers, pace and word choice."])
+      ]),
+      el("div", { class: "card prompt-card" }, [
+        el("div", { class: "row between" }, [
+          el("label", { class: "field" }, ["Difficulty ", levelSelect]),
+          el("button", { class: "btn ghost", onclick: newPrompt }, ["↻ New prompt"])
+        ]),
+        el("div", { class: "row" }, [
+          el("button", { class: "btn icon", title: "Hear the prompt",
+            onclick: () => window.Speech.speak(state.prompt) }, ["🔊"]),
+          promptText
+        ])
+      ]),
+      el("div", { class: "card" }, [practiceHost])
+    ]));
+
+    rebuildPractice();
+  }
+  function labelize(s) { return s.charAt(0).toUpperCase() + s.slice(1).replace(/-/g, " "); }
+
+  // ===================================================================
+  //  VIEW: VOCABULARY
+  // ===================================================================
+  function renderVocab() {
+    clear(app);
+    const decks = Object.keys(D.vocabDecks);
+    const state = { deck: decks[0], mode: "cards", idx: 0, flipped: false, quiz: null, score: 0, answered: 0 };
+
+    const host = el("div", { class: "card" });
+
+    function deckCards() { return D.vocabDecks[state.deck]; }
+
+    function renderCardMode() {
+      clear(host);
+      const cards = deckCards();
+      const card = cards[state.idx];
+      const face = el("div", {
+        class: "flashcard " + (state.flipped ? "flipped" : ""),
+        onclick: () => { state.flipped = !state.flipped; renderCardMode(); }
+      }, [
+        el("div", { class: "fc-label" }, [state.flipped ? "Professional" : "Casual / informal"]),
+        el("div", { class: "fc-main" }, [state.flipped ? card.pro : card.casual]),
+        state.flipped ? el("div", { class: "fc-extra" }, [
+          el("p", null, [el("strong", null, ["Why: "]), card.meaning]),
+          el("p", { class: "muted" }, [el("strong", null, ["e.g. "]), card.example])
+        ]) : el("div", { class: "fc-hint" }, ["tap to reveal the professional version"])
+      ]);
+
+      host.appendChild(el("div", null, [
+        el("div", { class: "row between" }, [
+          el("span", { class: "muted" }, [`Card ${state.idx + 1} / ${cards.length}`]),
+          el("button", { class: "btn icon", title: "Hear it",
+            onclick: ev => { ev.stopPropagation(); window.Speech.speak(state.flipped ? card.pro : card.casual); } }, ["🔊"])
+        ]),
+        face,
+        el("div", { class: "row between" }, [
+          el("button", { class: "btn ghost", onclick: () => { state.idx = (state.idx - 1 + cards.length) % cards.length; state.flipped = false; renderCardMode(); } }, ["← Prev"]),
+          el("button", { class: "btn", onclick: () => { window.Store.recordVocab(1); state.idx = (state.idx + 1) % cards.length; state.flipped = false; renderCardMode(); } }, ["Next →"])
+        ])
+      ]));
+    }
+
+    function newQuiz() {
+      const cards = deckCards();
+      const correct = pick(cards);
+      const distractors = cards.filter(c => c !== correct);
+      const opts = [correct];
+      while (opts.length < Math.min(4, cards.length)) {
+        const d = pick(distractors);
+        if (!opts.includes(d)) opts.push(d);
+      }
+      // shuffle
+      for (let i = opts.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [opts[i], opts[j]] = [opts[j], opts[i]];
+      }
+      state.quiz = { correct, opts, done: false };
+    }
+
+    function renderQuizMode() {
+      clear(host);
+      if (!state.quiz) newQuiz();
+      const q = state.quiz;
+      const feedback = el("div", { class: "quiz-feedback" });
+
+      const optionBtns = q.opts.map(o => el("button", {
+        class: "btn option",
+        onclick: () => {
+          if (q.done) return;
+          q.done = true;
+          state.answered++;
+          const right = o === q.correct;
+          if (right) state.score++;
+          window.Store.recordVocab(1);
+          optionBtns.forEach(b => {
+            b.disabled = true;
+            if (b._card === q.correct) b.classList.add("correct");
+            else if (b._card === o) b.classList.add("wrong");
+          });
+          clear(feedback);
+          feedback.appendChild(el("div", { class: right ? "fb good" : "fb bad" }, [
+            right ? "✅ Correct!" : "❌ Not quite.",
+            el("p", null, [el("strong", null, ["Pro version: "]), q.correct.pro]),
+            el("p", { class: "muted" }, [q.correct.meaning])
+          ]));
+          feedback.appendChild(el("button", { class: "btn accent", onclick: () => { newQuiz(); renderQuizMode(); } }, ["Next question →"]));
+        }
+      }, [o.pro]));
+      optionBtns.forEach((b, i) => { b._card = q.opts[i]; });
+
+      host.appendChild(el("div", null, [
+        el("div", { class: "row between" }, [
+          el("span", { class: "muted" }, [`Score: ${state.score} / ${state.answered}`]),
+        ]),
+        el("p", { class: "quiz-q" }, ['How would you say this more professionally?']),
+        el("div", { class: "quiz-prompt" }, [`"${state.quiz.correct.casual}"`]),
+        el("div", { class: "options" }, optionBtns),
+        feedback
+      ]));
+    }
+
+    function render() {
+      if (state.mode === "cards") renderCardMode();
+      else renderQuizMode();
+    }
+
+    const deckSelect = el("select", {
+      class: "select",
+      onchange: e => { state.deck = e.target.value; state.idx = 0; state.flipped = false; state.quiz = null; render(); }
+    }, decks.map(d => el("option", { value: d }, [d])));
+
+    function modeBtn(mode, label) {
+      return el("button", {
+        class: "btn " + (state.mode === mode ? "primary" : "ghost"),
+        onclick: () => { state.mode = mode; if (mode === "quiz") { state.quiz = null; } render();
+          // refresh toggle styling
+          modeRow.querySelectorAll("button").forEach(b => b.classList.remove("primary"));
+          modeRow.querySelectorAll("button").forEach(b => { if (b.textContent === label) b.classList.add("primary"); });
+        }
+      }, [label]);
+    }
+    const modeRow = el("div", { class: "row" }, [modeBtn("cards", "Flashcards"), modeBtn("quiz", "Quiz")]);
+    // ensure initial active styling
+    modeRow.querySelectorAll("button").forEach((b, i) => { b.classList.toggle("primary", i === 0); b.classList.toggle("ghost", i !== 0); });
+
+    app.appendChild(el("section", { class: "view" }, [
+      el("div", { class: "view-head" }, [
+        el("h2", null, ["📚 Professional vocabulary & phrasing"]),
+        el("p", { class: "muted" }, ["Swap casual phrases for polished, professional alternatives. Flip cards to learn, then test yourself."])
+      ]),
+      el("div", { class: "card" }, [
+        el("div", { class: "row between" }, [
+          el("label", { class: "field" }, ["Topic ", deckSelect]),
+          modeRow
+        ])
+      ]),
+      host
+    ]));
+
+    render();
+  }
+
+  // ===================================================================
+  //  VIEW: CONVERSATION (role-play scenarios)
+  // ===================================================================
+  function renderConversation() {
+    clear(app);
+    const state = { current: null };
+    const detailHost = el("div");
+
+    function renderList() {
+      clear(detailHost);
+      const cards = D.scenarios.map(s => el("button", {
+        class: "scenario-card",
+        onclick: () => { state.current = s; renderDetail(); }
+      }, [
+        el("span", { class: "tag" }, [s.category]),
+        el("h3", null, [s.title]),
+        el("p", { class: "muted" }, [s.situation])
+      ]));
+      detailHost.appendChild(el("div", { class: "scenario-grid" }, cards));
+    }
+
+    function renderDetail() {
+      clear(detailHost);
+      const s = state.current;
+      detailHost.appendChild(el("div", null, [
+        el("button", { class: "btn ghost", onclick: () => { state.current = null; renderList(); } }, ["← All scenarios"]),
+        el("div", { class: "card scenario-detail" }, [
+          el("span", { class: "tag" }, [s.category]),
+          el("h3", null, [s.title]),
+          el("p", null, [el("strong", null, ["Situation: "]), s.situation]),
+          el("p", null, [el("strong", null, ["Your role: "]), s.role]),
+          el("div", { class: "prompt-callout" }, [
+            el("button", { class: "btn icon", title: "Hear it", onclick: () => window.Speech.speak(s.prompt) }, ["🔊"]),
+            el("p", null, [s.prompt])
+          ]),
+          el("details", { class: "hint-box" }, [
+            el("summary", null, ["💬 Useful phrases (tap to reveal)"]),
+            el("ul", null, s.phrases.map(p => el("li", null, [
+              p, " ",
+              el("button", { class: "mini", title: "Hear it", onclick: () => window.Speech.speak(p) }, ["🔊"])
+            ])))
+          ]),
+          el("details", { class: "hint-box" }, [
+            el("summary", null, ["🎯 A strong answer usually includes…"]),
+            el("ul", null, s.goodAnswerIncludes.map(g => el("li", null, [g])))
+          ])
+        ]),
+        el("div", { class: "card" }, [
+          el("h4", null, ["Your turn — respond out loud"]),
+          buildPractice(s.title, "conversation")
+        ])
+      ]));
+    }
+
+    app.appendChild(el("section", { class: "view" }, [
+      el("div", { class: "view-head" }, [
+        el("h2", null, ["🗣️ Conversation & soft skills"]),
+        el("p", { class: "muted" }, ["Role-play real workplace moments — feedback, negotiation, conflict and small talk. Read the situation, then respond out loud."])
+      ]),
+      detailHost
+    ]));
+
+    renderList();
+  }
+
+  // ===================================================================
+  //  VIEW: PROGRESS
+  // ===================================================================
+  function renderProgress() {
+    clear(app);
+    const s = window.Store.load();
+    const streak = window.Store.currentStreak(s);
+    const avg = window.Store.averageScore(s);
+    const days = window.Store.practiceDays(s).size;
+
+    const stats = el("div", { class: "metrics big" }, [
+      metric("Day streak", streak, ""),
+      metric("Sessions", s.sessions.length, ""),
+      metric("Avg score", avg || "—", avg ? "/100" : ""),
+      metric("Words spoken", s.totalWords, ""),
+      metric("Practice time", fmtTime(s.totalSeconds), ""),
+      metric("Vocab reviewed", s.vocabReviewed, "")
+    ]);
+
+    let history;
+    if (!s.sessions.length) {
+      history = el("p", { class: "muted" }, ["No sessions yet — head to Speaking or Conversation to start practising!"]);
+    } else {
+      history = el("ul", { class: "history" }, s.sessions.slice(0, 15).map(sess => {
+        const d = new Date(sess.at);
+        const cls = sess.score >= 80 ? "good" : sess.score >= 60 ? "ok" : "low";
+        return el("li", null, [
+          el("span", { class: "h-score " + cls }, [sess.score ? String(sess.score) : "–"]),
+          el("span", { class: "h-body" }, [
+            el("strong", null, [labelize(sess.kind)]),
+            el("span", { class: "muted" }, [` · ${sess.wordCount} words · ${d.toLocaleDateString()} ${d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`]),
+            sess.prompt ? el("div", { class: "muted small" }, [sess.prompt]) : null
+          ])
+        ]);
+      }));
+    }
+
+    app.appendChild(el("section", { class: "view" }, [
+      el("div", { class: "view-head" }, [
+        el("h2", null, ["📈 Your progress"]),
+        el("p", { class: "muted" }, ["Track your consistency and improvement over time. Practise a little every day to build your streak."])
+      ]),
+      el("div", { class: "card" }, [stats]),
+      el("div", { class: "card" }, [
+        el("div", { class: "row between" }, [
+          el("h3", null, ["Recent sessions"]),
+          s.sessions.length ? el("button", { class: "btn ghost danger", onclick: () => {
+            if (confirm("Clear all saved progress? This can't be undone.")) { window.Store.reset(); renderProgress(); }
+          } }, ["Reset"]) : null
+        ]),
+        history
+      ])
+    ]));
+  }
+
+  // ===================================================================
+  //  ROUTER
+  // ===================================================================
+  const views = {
+    speaking: renderSpeaking,
+    vocab: renderVocab,
+    conversation: renderConversation,
+    progress: renderProgress
+  };
+
+  function go(view) {
+    [...tabs.children].forEach(b => b.classList.toggle("active", b.dataset.view === view));
+    (views[view] || renderSpeaking)();
+    window.scrollTo({ top: 0 });
+  }
+
+  tabs.addEventListener("click", e => {
+    const btn = e.target.closest(".tab");
+    if (btn) go(btn.dataset.view);
+  });
+
+  go("speaking");
+})();
+
+
+  </script>
+</body>
+</html>
