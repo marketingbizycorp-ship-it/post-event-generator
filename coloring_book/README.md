@@ -35,6 +35,20 @@ This writes:
 
 - `coloring_book/pages/*.svg` — one crisp vector page each (print any single page)
 - `coloring_book/coloring-book.html` — the whole book in one file
+- `coloring_book/index.html` — a clickable gallery (the local server's home page)
+
+## View it on localhost
+
+```bash
+python coloring_book/serve.py            # serves http://localhost:8000
+python coloring_book/serve.py --port 9000
+python coloring_book/serve.py --no-browser
+```
+
+This starts a tiny standard-library web server (no Flask, no installs), builds
+the pages if they're missing, and opens the gallery at
+**http://localhost:8000/**. From there, open any page or the full printable
+book. Press **Ctrl+C** to stop.
 
 ## Print it
 

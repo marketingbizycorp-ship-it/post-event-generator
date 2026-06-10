@@ -629,6 +629,62 @@ def build():
     with open(book_path, "w", encoding="utf-8") as f:
         f.write(doc)
     print(f"  wrote coloring-book.html ({len(rendered)} pages)")
+
+    # Landing gallery (the localhost home page).
+    cards = []
+    for slug, t, svg in rendered:
+        cards.append(f"""
+      <a class="card" href="pages/{slug}.svg" target="_blank" rel="noopener">
+        <div class="thumb">{svg}</div>
+        <div class="cap">{html.escape(t)}</div>
+      </a>""")
+    index_html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>K-Pop Demon Hunters — Coloring Book</title>
+<style>
+  body {{ margin:0; font-family:Arial, sans-serif; color:#1b1b29;
+          background:#f4f4fb; }}
+  header {{ text-align:center; padding:34px 16px 10px; }}
+  header h1 {{ margin:0; font-size:34px; letter-spacing:1px; }}
+  header p {{ margin:8px 0 0; color:#555; }}
+  .bar {{ text-align:center; margin:18px 0 8px; }}
+  .bar a {{ display:inline-block; background:#1b1b29; color:#fff;
+            text-decoration:none; padding:12px 22px; border-radius:999px;
+            font-weight:bold; }}
+  .grid {{ display:grid; gap:20px; padding:24px;
+           grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
+           max-width:1100px; margin:0 auto; }}
+  .card {{ background:#fff; border-radius:14px; overflow:hidden;
+           box-shadow:0 2px 10px rgba(0,0,0,.12); text-decoration:none;
+           color:inherit; transition:transform .12s, box-shadow .12s; }}
+  .card:hover {{ transform:translateY(-3px);
+                 box-shadow:0 8px 20px rgba(0,0,0,.18); }}
+  .thumb {{ aspect-ratio:850/1100; background:#fff; border-bottom:1px solid #eee; }}
+  .thumb svg {{ display:block; width:100%; height:100%; }}
+  .cap {{ padding:12px 14px; font-weight:bold; text-align:center; }}
+  footer {{ text-align:center; color:#888; padding:10px 16px 34px; font-size:14px; }}
+</style>
+</head>
+<body>
+  <header>
+    <h1>🎤 K-Pop Demon Hunters 🗡️</h1>
+    <p>Children's coloring book — {len(rendered)} printable pages. Tap a page to open it.</p>
+  </header>
+  <div class="bar">
+    <a href="coloring-book.html">📖 Open the full printable book (Save as PDF)</a>
+  </div>
+  <div class="grid">{''.join(cards)}
+  </div>
+  <footer>Original, kid-friendly line art • print on US Letter</footer>
+</body>
+</html>"""
+    index_path = os.path.join(HERE, "index.html")
+    with open(index_path, "w", encoding="utf-8") as f:
+        f.write(index_html)
+    print(f"  wrote index.html (gallery)")
     return book_path
 
 
